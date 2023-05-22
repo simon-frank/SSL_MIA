@@ -36,9 +36,17 @@ class Solarization(object):
 
 
 class BarlowTransform:
-    def __init__(self):
+    def __init__(self, img_size= 224, to_rgb = False):
+        self.img_size = img_size
+        self.to_rgb = to_rgb
+
+        self.convert_rgb = lambda x: x
+
+        if self.to_rgb:
+            self.convert_rgb = lambda x: x.repeat(3,1,1)
+
         self.transform = transforms.Compose([
-            transforms.RandomResizedCrop(224, interpolation=Image.BICUBIC),
+            transforms.RandomResizedCrop(self.img_size, interpolation=Image.BICUBIC),
             transforms.RandomHorizontalFlip(p=0.5),
             transforms.RandomApply(
                 [transforms.ColorJitter(brightness=0.4, contrast=0.4,
@@ -49,11 +57,12 @@ class BarlowTransform:
             GaussianBlur(p=1.0),
             Solarization(p=0.0),
             transforms.ToTensor(),
+            self.convert_rgb,
             transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225])
         ])
         self.transform_prime = transforms.Compose([
-            transforms.RandomResizedCrop(224, interpolation=Image.BICUBIC),
+            transforms.RandomResizedCrop(self.img_size, interpolation=Image.BICUBIC),
             transforms.RandomHorizontalFlip(p=0.5),
             transforms.RandomApply(
                 [transforms.ColorJitter(brightness=0.4, contrast=0.4,
@@ -64,6 +73,7 @@ class BarlowTransform:
             GaussianBlur(p=0.1),
             Solarization(p=0.2),
             transforms.ToTensor(),
+            self.convert_rgb,
             transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225])
         ])

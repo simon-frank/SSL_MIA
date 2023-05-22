@@ -126,7 +126,6 @@ class Lars(Optimizer):
                         grad = grad.add(buf, alpha=momentum)
                     else:
                         grad = buf
-
                 p.add_(grad, alpha=-group['lr'])
 
         return loss
