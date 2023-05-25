@@ -1,7 +1,9 @@
 from torch import nn
 import torch
 import torchvision
-
+import pytorch_lightning as pl
+from lightly.models.modules import BarlowTwinsProjectionHead
+from lightly.loss import BarlowTwinsLoss
 
 """
 Adapted from https://github.com/facebookresearch/barlowtwins
@@ -39,4 +41,27 @@ def BarlowLoss(z1, z2, w):
     off_diag = _off_diagonal(cross_correlation).pow_(2).sum()
     loss = on_diag +  w * off_diag
     return loss
+
+
+class BarlowTwinsLit(pl.LightningModule):
+    def __init__(self, backbone, input_dim, hidden_dim, output_dim):
+        super().__init__()
+        self.backbone = backbone
+        self.projection_head = BarlowTwinsProjectionHead(input_dim, hidden_dim, output_dim)
+        self.criterion = BarlowTwinsLoss(gather_distributed=True)
+        
+    def forward(self, x):
+        x = self.backbone(x).flatten(dim = 1)
+        return self.projection_head(x)
+    
+    def training_step(self, batch, batch_index):
+         (x1, x2),_,_ = batch
+         z1 = self.forward(x1)
+         z2 = self.forward(x2)
+         loss = self.criterion(z1,z2)
+         return loss
+    
+    def configure_optimizers(self, optimizer):
+         return optimizer
+
 
