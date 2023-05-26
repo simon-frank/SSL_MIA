@@ -50,6 +50,7 @@ class BarlowTwinsLit(pl.LightningModule):
         self.projection_head = BarlowTwinsProjectionHead(config['input_size'], config['hidden_size'], config['output_size'])
         self.criterion = BarlowTwinsLoss(gather_distributed=True)
         self.lr = config['lr']
+        self.optim = config['optimizer']
         
     def forward(self, x):
         x = self.backbone(x).flatten(start_dim = 1)
@@ -63,7 +64,7 @@ class BarlowTwinsLit(pl.LightningModule):
          return loss
     
     def configure_optimizers(self):
-         optimizer = torch.optim.SGD(self.parameters(), lr = self.lr)
+         optimizer = self.optim(self.parameters(), lr = self.lr)
          return optimizer
 
 
