@@ -3,6 +3,8 @@ import torch.nn as nn
 
 from models.barlowtwins import BarlowTwinsLit
 import torchvision
+from mimeta import  MIMeta
+
 
 import pytorch_lightning as pl
 from lightly.transforms.simclr_transform import SimCLRTransform
@@ -13,10 +15,10 @@ from lightly.data import LightlyDataset
 def main():
 
     config =  {'data': 'data/',
-               'lr': 0.06,
+               'lr': 0.007,
                'optimizer': torch.optim.SGD,
-               'epochs': 10,
-               'batch_size:': 8,
+               'epochs': 100,
+               'batch_size:': 128,
                'input_size': 512,
                'hidden_size': 2048,
                'output_size': 2048,
@@ -30,7 +32,8 @@ def main():
     # create model
     model = BarlowTwinsLit(backbone, config)
 
-    MIMA = torchvision.datasets.ImageFolder(config['data'])
+    # load data
+    MIMA = MIMeta('/graphics/scratch2/datasets/practical_course/MIMeta/data', 'Fundus Multi-disease', 'disease presence')
 
     collate_fn = MultiViewCollate()
     transform = SimCLRTransform(input_size=config['img_size'])
@@ -45,14 +48,14 @@ def main():
             shuffle = True)
     
     
+    # train
     accelerator = 'gpu' if torch.cuda.is_available() else 'cpu'
 
     trainer = pl.Trainer(
-        max_epochs = 10,
+        max_epochs = config['epochs'],
         devices='auto',
         accelerator=accelerator 
     )
-
     trainer.fit(model= model, train_dataloaders=dataloader)
 
 if __name__ == '__main__':
