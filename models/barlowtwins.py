@@ -61,6 +61,9 @@ class BarlowTwinsLit(pl.LightningModule):
          z1 = self.forward(x1)
          z2 = self.forward(x2)
          loss = self.criterion(z1,z2)
+        #  print(loss)
+        #  result = pl.TrainResult(loss)
+         self.log('train_loss', loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
          return loss
     
     def configure_optimizers(self):
