@@ -9,7 +9,7 @@ data:
       task: 'organ label'
 seed: 12345
 lr: 0.03
-optimizer: torch.optim.SGD
+optimizer: SGD
 epochs: 100
 batch_size: 256
 input_size: 512
