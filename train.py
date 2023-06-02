@@ -38,7 +38,7 @@ def main():
 
     dataloader = torch.utils.data.DataLoader(
             train,
-            batch_size=config['batch_size:'],
+            batch_size=config['batch_size'],
             collate_fn = collate_fn, 
             num_workers=4, 
             shuffle = True)
