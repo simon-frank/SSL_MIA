@@ -19,6 +19,7 @@ def get_data(config):
     make_rgb = transforms.Compose([
     transforms.ToTensor(),
     transforms.Grayscale(num_output_channels=3),  # Convert to RGB
+    config['transform'],
     #transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     # Other transformations...
 ])
@@ -28,12 +29,12 @@ def get_data(config):
     alldatasets=[]
 
     for dataset in config['data']['datasets']:
-        alldatasets.append(MIMeta(config['data']['path'], dataset['domain'], dataset['task'], transform = make_rgb))
+        alldatasets.append(MIMeta(config['data']['path'], dataset['domain'], dataset['task']))
 
 
     #data = torch.utils.data.ConcatDataset(alldatasets)
 
-    litdata = LightlyDataset.from_torch_dataset(alldatasets[1], transform=config['transform'])
+    litdata = LightlyDataset.from_torch_dataset(alldatasets[1], transform=make_rgb)
 
     data_splits = torch.utils.data.random_split(litdata, splits, generator = generator)
 
