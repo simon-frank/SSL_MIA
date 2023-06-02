@@ -33,7 +33,7 @@ def get_data(config):
 
     #data = torch.utils.data.ConcatDataset(alldatasets)
 
-    litdata = LightlyDataset.from_torch_dataset(alldatasets[0], transform=config['transform'])
+    litdata = LightlyDataset.from_torch_dataset(alldatasets[1], transform=config['transform'])
 
     data_splits = torch.utils.data.random_split(litdata, splits, generator = generator)
 

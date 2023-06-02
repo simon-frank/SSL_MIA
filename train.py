@@ -64,7 +64,7 @@ def main():
         
     )
 
-    device = 'gpu' if torch.cuda.is_available() else 'cpu'
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     criterion = BarlowTwinsLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=0.06)
@@ -74,6 +74,7 @@ def main():
     for epoch in range(10):
         total_loss = 0
         for (x0, x1), _, _ in dataloader:
+            print(x0.shape)
             x0 = x0.to(device)
             x1 = x1.to(device)
             z0 = model(x0)
