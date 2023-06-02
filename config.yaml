@@ -1,6 +1,8 @@
 data: 
   path: '/graphics/scratch2/datasets/practical_course/MIMeta/data'
   datasets:
+    - domain: 'Peripheral Blood Cells'
+      task: 'cell class'
     - domain: 'Axial Organ Slices'
       task: 'organ label'
     - domain: 'Coronal Organ Slices'
