@@ -45,6 +45,6 @@ def load_config(path):
     if config['optimizer'] == 'Adam':
         config['optimizer'] = torch.optim.Adam
     if config['transform'] == 'SimCLRTransform':
-        config['transform'] = SimCLRTransform
+        config['transform'] = SimCLRTransform(input_size = config['img_size'])
 
     return config

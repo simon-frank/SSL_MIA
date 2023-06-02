@@ -68,6 +68,7 @@ def main():
         devices='auto',
         accelerator=accelerator,
         callbacks=[checkpoint_callback],
+        log_every_n_steps=8,
     )
 
     trainer.fit(model= model, train_dataloaders=dataloader)
