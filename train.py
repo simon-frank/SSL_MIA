@@ -5,6 +5,7 @@ import torch.nn as nn
 
 from models.barlowtwins import BarlowTwinsLit
 from utils.data import get_data, load_config
+from utils.custommultiviewcollatefunction import CustomMultiViewCollateFunction
 import torchvision
 from mimeta import  MIMeta
 
@@ -31,7 +32,7 @@ def main():
     model = BarlowTwinsLit(backbone, config)
 
     # load data
-    config['transform'] = config['transform'](input_size=config['img_size'])
+    #config['transform'] = config['transform'](input_size=config['img_size'])
 
     train, val, test = get_data(config)
     collate_fn = MultiViewCollate()
@@ -39,7 +40,7 @@ def main():
     dataloader = torch.utils.data.DataLoader(
             train,
             batch_size=config['batch_size'],
-            collate_fn = collate_fn, 
+            collate_fn = CustomMultiViewCollateFunction(), 
             num_workers=4, 
             shuffle = True)
     
