@@ -4,7 +4,7 @@ data:
     - domain: 'Axial Organ Slices'
       task: 'organ label'
     - domain: 'Coronal Organ Slices'
-    task: 'organ label'
+      task: 'organ label'
     - domain: 'Sagittal Organ Slices'
       task: 'organ label'
 seed: 12345
