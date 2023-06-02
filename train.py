@@ -53,8 +53,11 @@ def main():
     #    monitor='val_loss',  # Metric to monitor for saving models
     #)
 
+    save_path = os.path.join(config['model']['path'], config['model']['name'])
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
     checkpoint_callback = ModelCheckpoint(
-        dirpath=os.path.join(config['save_path'], config['model_name']),
+        dirpath=save_path
         
     )
 
