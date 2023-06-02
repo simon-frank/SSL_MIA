@@ -1,13 +1,17 @@
+import yaml
+import os
 import torch
 import torch.nn as nn
 
 from models.barlowtwins import BarlowTwinsLit
-from utils.data import get_data
+from utils.data import get_data, load_config
 import torchvision
 from mimeta import  MIMeta
 
 
 import pytorch_lightning as pl
+from pytorch_lightning.callbacks import ModelCheckpoint
+
 from lightly.transforms.simclr_transform import SimCLRTransform
 from lightly.data.multi_view_collate import MultiViewCollate
 from lightly.data import LightlyDataset
@@ -15,21 +19,9 @@ from lightly.data import LightlyDataset
 
 def main():
 
-    config =  {'data': '/graphics/scratch2/datasets/practical_course/MIMeta/data',
-              'seed': 12345,
-               'lr': 0.03,
-               'optimizer': torch.optim.SGD,
-               'epochs': 100,
-               'batch_size:': 192,
-               'input_size': 512,
-               'hidden_size': 2048,
-               'output_size': 2048,
-               'img_size': 224,
-               'splits': [0.8,0.1,0.1],
-               'domain': 'Peripheral Blood Cells',
-               'task': 'cell class',
-               'transform': SimCLRTransform
-               }
+    
+    # Load config file
+    config = load_config('config.yaml')
 
     #define backbone
     backbone = torchvision.models.resnet18(zero_init_residual=True)
@@ -51,13 +43,28 @@ def main():
             num_workers=4, 
             shuffle = True)
     
-    
+
+    # Create a ModelCheckpoint callback
+    #checkpoint_callback = ModelCheckpoint(
+    #    dirpath='path/to/save/directory',
+    #    filename='model_{epoch}-{val_loss:.2f}',  # Customize the filename pattern
+    #    save_top_k=5,  # Set the number of models to save
+    #    mode='min',  # 'min' or 'max' depending on the metric being tracked
+    #    monitor='val_loss',  # Metric to monitor for saving models
+    #)
+
+    checkpoint_callback = ModelCheckpoint(
+        dirpath=os.path.join(config['save_path'], config['model_name']),
+        
+    )
+
     accelerator = 'gpu' if torch.cuda.is_available() else 'cpu'
 
     trainer = pl.Trainer(
         max_epochs = config['epochs'],
         devices='auto',
-        accelerator=accelerator 
+        accelerator=accelerator,
+        callbacks=[checkpoint_callback],
     )
 
     trainer.fit(model= model, train_dataloaders=dataloader)

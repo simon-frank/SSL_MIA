@@ -1,15 +1,17 @@
 data: 
   path: '/graphics/scratch2/datasets/practical_course/MIMeta/data'
   datasets:
-    - domain: 'Peripheral Blood Cells'
-      task: 'cell class'
-    - domain: 'Chest X-Ray'
-      task: 'disease class'
+    - domain: 'Axial Organ Slices'
+      task: 'organ label'
+    - domain: 'Coronal Organ Slices'
+    task: 'organ label'
+    - domain: 'Sagittal Organ Slices'
+      task: 'organ label'
 seed: 12345
 lr: 0.03
 optimizer: torch.optim.SGD
 epochs: 100
-batch_size: 192
+batch_size: 256
 input_size: 512
 hidden_size: 2048
 output_size: 2048
@@ -18,3 +20,6 @@ splits: [0.80.10.1]
 domain: 'Peripheral Blood Cells'
 task: 'cell class'
 transform: SimCLRTransform
+model:
+  path: 'models'
+  name: 'firstrun'
