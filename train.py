@@ -5,7 +5,7 @@ import torch.nn as nn
 
 from models.barlowtwins import BarlowTwinsLit
 from utils.data import get_data, load_config
-from utils.custommultiviewcollatefunction import CustomMultiViewCollateFunction
+#from utils.custommultiviewcollatefunction import CustomMultiViewCollateFunction
 import torchvision
 from mimeta import  MIMeta
 
