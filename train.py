@@ -40,7 +40,7 @@ def main():
     dataloader = torch.utils.data.DataLoader(
             train,
             batch_size=config['batch_size'],
-            collate_fn = CustomMultiViewCollateFunction(), 
+            collate_fn = MultiViewCollate(), 
             num_workers=4, 
             shuffle = True)
     
