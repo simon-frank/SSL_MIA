@@ -28,9 +28,9 @@ def get_data(config):
         alldatasets.append(MIMeta(config['data']['path'], dataset['domain'], dataset['task'], transform = make_rgb))
 
 
-    data = torch.utils.data.ConcatDataset(alldatasets)
+    #data = torch.utils.data.ConcatDataset(alldatasets)
 
-    litdata = LightlyDataset.from_torch_dataset(data, transform=config['transform'])
+    litdata = LightlyDataset.from_torch_dataset(alldatasets[0], transform=config['transform'])
 
     data_splits = torch.utils.data.random_split(litdata, splits, generator = generator)
 
