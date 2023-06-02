@@ -20,7 +20,7 @@ def get_data(config):
         transforms.ToTensor(),
         transforms.Grayscale(num_output_channels = 3)])
     
-    transforms.Grayscale(num_output_channels = 3)
+    #transforms.Grayscale(num_output_channels = 3)
 
     alldatasets=[]
 
@@ -30,7 +30,7 @@ def get_data(config):
 
     data = torch.utils.data.ConcatDataset(alldatasets)
 
-    litdata = LightlyDataset.from_torch_dataset(alldatasets, transform=config['transform'])
+    litdata = LightlyDataset.from_torch_dataset(data, transform=config['transform'])
 
     data_splits = torch.utils.data.random_split(litdata, splits, generator = generator)
 
