@@ -17,6 +17,7 @@ def get_data(config):
     generator = torch.Generator().manual_seed(manuel_seed)
 
     make_rgb = transforms.Compose([
+        transforms.ToTensor(),
         transforms.Grayscale(num_output_channels = 3)])
     
     #transforms.Grayscale(num_output_channels = 3)
