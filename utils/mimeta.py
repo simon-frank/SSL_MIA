@@ -83,5 +83,51 @@ class MIMetaWrapper(Dataset):
 
     def __len__(self):
         return self.len
+    
+
+    @classmethod
+    def get_available_datasets(cls, data_path: str) -> list[str]:
+        if cls._dataset_dir_mapping is None or cls._data_path != data_path:
+            cls._read_dataset_info(data_path)
+        return list(cls._dataset_dir_mapping.keys())
+
+    @classmethod
+    def get_available_tasks(cls, data_path: str) -> dict[str, list[str]]:
+        if cls._available_tasks is None or cls._data_path != data_path:
+            cls._read_dataset_info(data_path)
+        return cls._available_tasks
+
+    @classmethod
+    def get_info_dict(cls, data_path: str, dataset_name: str) -> dict:
+        if cls._dataset_dir_mapping is None or cls._data_path != data_path:
+            cls._read_dataset_info(data_path)
+        if dataset_name not in cls._infos:
+            raise ValueError(
+                f"Dataset '{dataset_name}' not found. "
+                f"Available datasets: {list(cls._infos.keys())}"
+            )
+        return cls._infos[dataset_name]
+
+    @classmethod
+    def _read_dataset_info(cls, data_path: str):
+        cls._dataset_dir_mapping = {}
+        cls._available_tasks = {}
+        cls._infos = {}
+        for subdir in os.listdir(data_path):
+            subdir_path = os.path.join(data_path, subdir)
+            if not os.path.isdir(subdir_path):
+                continue
+            info_path = os.path.join(subdir_path, "info.yaml")
+            if not os.path.isfile(info_path):
+                continue
+            with open(info_path, "r") as f:
+                info = yaml.load(f, Loader=yaml.FullLoader)
+                cls._infos[info["name"]] = info
+                cls._dataset_dir_mapping[info["name"]] = subdir
+                cls._available_tasks[info["name"]] = [
+                    t["task_name"] for t in info["tasks"]
+                ]
+        cls._data_path = data_path
+
 
     
