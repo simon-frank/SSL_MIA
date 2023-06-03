@@ -47,7 +47,8 @@ class BarlowTwinsLit(pl.LightningModule):
     def __init__(self, backbone, config:dict):
         super().__init__()
         self.backbone = backbone
-        self.projection_head = BarlowTwinsProjectionHead(config['input_size'], config['hidden_size'], config['output_size'])
+        projectionhead_config = config["pretraining"]["method"]["projection_head"]
+        self.projection_head = BarlowTwinsProjectionHead(projectionhead_config['input_size'], projectionhead_config['hidden_size'], projectionhead_config['output_size'])
         self.criterion = BarlowTwinsLoss(gather_distributed=True)
         self.lr = config['lr']
         self.weight_decay = config['weight_decay']

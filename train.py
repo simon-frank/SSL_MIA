@@ -4,7 +4,8 @@ import torch
 import torch.nn as nn
 
 from models.barlowtwins import BarlowTwinsLit
-from utils.data import get_data, load_config
+from utils.data import get_data_pretraining, load_config
+from utils.modelFactory import createModel
 #from utils.custommultiviewcollatefunction import CustomMultiViewCollateFunction
 import torchvision
 from mimeta import  MIMeta
@@ -26,17 +27,11 @@ def main():
     # Load config file
     config = load_config('config.yaml')
 
-    #define backbone
-    backbone = torchvision.models.resnet18(zero_init_residual=True)
-    backbone.fc = nn.Identity()
-
     # create model
-    model = BarlowTwinsLit(backbone, config)
+    model = createModel(config)
 
-    # load data
-    #config['transform'] = config['transform'](input_size=config['img_size'])
-
-    train, val, test = get_data(config)
+    # get data for pretraining
+    train, val, test = get_data_pretraining(config)
     collate_fn = MultiViewCollate()
     dataloader = torch.utils.data.DataLoader(
             train,
@@ -54,13 +49,11 @@ def main():
     #    monitor='val_loss',  # Metric to monitor for saving models
     #)
 
-    save_path = os.path.join(config['model']['path'], config['model']['name'])
+    save_path = os.path.join(config['savedmodel']['path'], config['savemodel']['name'])
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     checkpoint_callback = ModelCheckpoint(
-        dirpath=save_path
-        
-    )
+        dirpath=save_path)
 
 
     accelerator = 'gpu' if torch.cuda.is_available() else 'cpu'
@@ -71,7 +64,6 @@ def main():
         callbacks=[checkpoint_callback],
         log_every_n_steps=15,
     )
-#
     trainer.fit(model= model, train_dataloaders=dataloader)
 
 if __name__ == '__main__':

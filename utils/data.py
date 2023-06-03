@@ -13,7 +13,7 @@ Helper function to get the data splits always with the same seed and adjusted wr
 """
 def get_data_pretraining(config):
 
-    manuel_seed = 42
+    manuel_seed = 42 #do not change
 
     splits = [0.8,0.1,0.1]
 
@@ -38,9 +38,10 @@ def get_data_pretraining(config):
 """
 Helper function to get the data splits always with the same seed and adjusted wrapper for the pretraining
 """
+# TODO: use mimeta
 def get_data_finetuning(config):
 
-    manuel_seed = 42
+    manuel_seed = 42 #do not change
 
     splits = [0.8,0.1,0.1]
 
@@ -49,12 +50,7 @@ def get_data_finetuning(config):
     make_rgb = transforms.Compose([
     transforms.Grayscale(num_output_channels=3),  
     config['transform'],])
-    alldatasets=[]
-
-    for dataset in config['data']['datasets']:
-        alldatasets.append([dataset['domain'], dataset['task']])
-
-    data = MIMetaWrapper(config['data']['path'], alldatasets)
+    data = MIMeta(config['data']['path'], config['evaluation']['domain'], config['evaluation']['task'])
 
     litdata = LightlyDataset.from_torch_dataset(data, transform=make_rgb)
 

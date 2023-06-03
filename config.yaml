@@ -7,17 +7,27 @@ data:
       task: 'organ label'
     - domain: 'organs_sagittal'
       task: 'organ label'
-seed: 12345
+evaluation:
+  domain: 'Axial Organ Slices'
+  task: 'Organ label'
+  modelpath: '/home/franksim/SSL_MIA/trained_models/firstrun/epoch=999-step=8000.ckpt'
 lr: 0.03
 optimizer: Adam
 weight_decay: 0.0000015
 epochs: 1000
 batch_size: 256
-input_size: 512
-hidden_size: 2048
-output_size: 2048
 img_size: 224
 transform: SimCLRTransform
-model:
+savedmodel:
   path: 'trained_models'
   name: 'firstrun'
+usedMethod: BarlowTwins
+pretraining:
+  method: BarlowTwins
+    backbone: 
+      name: resnet18
+      pretrained: True
+    projection_head:
+      input_size: 512
+      hidden_size: 2048
+      output_size: 2048
