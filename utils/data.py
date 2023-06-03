@@ -5,10 +5,13 @@ from torchvision import transforms
 import yaml
 from lightly.transforms.simclr_transform import SimCLRTransform
 
+from utils.mimeta_warpper import MIMetaWrapper
+
+
 """
-Helper function to get the data splits always with the same seed
+Helper function to get the data splits always with the same seed and adjusted wrapper for the pretraining
 """
-def get_data(config):
+def get_data_pretraining(config):
 
     manuel_seed = 42
 
@@ -17,23 +20,43 @@ def get_data(config):
     generator = torch.Generator().manual_seed(manuel_seed)
 
     make_rgb = transforms.Compose([
-    transforms.Grayscale(num_output_channels=3),  # Convert to RGB
-    config['transform'],
-    #transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-    # Other transformations...
-])
-    
-    #transforms.Grayscale(num_output_channels = 3)
-
+    transforms.Grayscale(num_output_channels=3),  
+    config['transform'],])
     alldatasets=[]
 
     for dataset in config['data']['datasets']:
-        alldatasets.append(MIMeta(config['data']['path'], dataset['domain'], dataset['task']))
+        alldatasets.append([dataset['domain'], dataset['task']])
 
+    data = MIMetaWrapper(config['data']['path'], alldatasets)
 
-    #data = torch.utils.data.ConcatDataset(alldatasets)
+    litdata = LightlyDataset.from_torch_dataset(data, transform=make_rgb)
 
-    litdata = LightlyDataset.from_torch_dataset(alldatasets[1], transform=make_rgb)
+    data_splits = torch.utils.data.random_split(litdata, splits, generator = generator)
+
+    return data_splits
+
+"""
+Helper function to get the data splits always with the same seed and adjusted wrapper for the pretraining
+"""
+def get_data_finetuning(config):
+
+    manuel_seed = 42
+
+    splits = [0.8,0.1,0.1]
+
+    generator = torch.Generator().manual_seed(manuel_seed)
+
+    make_rgb = transforms.Compose([
+    transforms.Grayscale(num_output_channels=3),  
+    config['transform'],])
+    alldatasets=[]
+
+    for dataset in config['data']['datasets']:
+        alldatasets.append([dataset['domain'], dataset['task']])
+
+    data = MIMetaWrapper(config['data']['path'], alldatasets)
+
+    litdata = LightlyDataset.from_torch_dataset(data, transform=make_rgb)
 
     data_splits = torch.utils.data.random_split(litdata, splits, generator = generator)
 

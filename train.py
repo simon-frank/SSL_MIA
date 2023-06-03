@@ -38,14 +38,12 @@ def main():
 
     train, val, test = get_data(config)
     collate_fn = MultiViewCollate()
-
     dataloader = torch.utils.data.DataLoader(
             train,
             batch_size=config['batch_size'],
             collate_fn = collate_fn, 
             num_workers=4, 
             shuffle = True)
-    
 
     # Create a ModelCheckpoint callback
     #checkpoint_callback = ModelCheckpoint(
@@ -64,40 +62,17 @@ def main():
         
     )
 
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-    criterion = BarlowTwinsLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.06)
-
-
-    print("Starting Training")
-    for epoch in range(10):
-        total_loss = 0
-        for (x0, x1), _, _ in dataloader:
-            print(x0.shape)
-            x0 = x0.to(device)
-            x1 = x1.to(device)
-            z0 = model(x0)
-            z1 = model(x1)
-            loss = criterion(z0, z1)
-            total_loss += loss.detach()
-            loss.backward()
-            optimizer.step()
-            optimizer.zero_grad()
-        avg_loss = total_loss / len(dataloader)
-        print(f"epoch: {epoch:>02}, loss: {avg_loss:.5f}")
-
-
-
-    #trainer = pl.Trainer(
-    #    max_epochs = config['epochs'],
-    #    devices='auto',
-    #    accelerator=accelerator,
-    #    callbacks=[checkpoint_callback],
-    #    log_every_n_steps=8,
-    #)
+    accelerator = 'gpu' if torch.cuda.is_available() else 'cpu'
+    trainer = pl.Trainer(
+        max_epochs = config['epochs'],
+        devices='auto',
+        accelerator=accelerator,
+        callbacks=[checkpoint_callback],
+        log_every_n_steps=15,
+    )
 #
-    #trainer.fit(model= model, train_dataloaders=dataloader)
+    trainer.fit(model= model, train_dataloaders=dataloader)
 
 if __name__ == '__main__':
     main()

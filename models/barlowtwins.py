@@ -50,6 +50,7 @@ class BarlowTwinsLit(pl.LightningModule):
         self.projection_head = BarlowTwinsProjectionHead(config['input_size'], config['hidden_size'], config['output_size'])
         self.criterion = BarlowTwinsLoss(gather_distributed=True)
         self.lr = config['lr']
+        self.weight_decay = config['weight_decay']
         self.optim = config['optimizer']
         
     def forward(self, x):
@@ -67,7 +68,11 @@ class BarlowTwinsLit(pl.LightningModule):
          return loss
     
     def configure_optimizers(self):
-         optimizer = self.optim(self.parameters(), lr = self.lr)
+          #optimizer = self.optim([
+         #       {'params': self.parameters(), 'lr': 0.2},      # Set learning rate for weights
+         #       {'params': self.bias, 'lr': 0.02},              # Set learning rate for biases
+         #       ], lr=0.1)
+         optimizer = self.optim(self.parameters(), lr = self.lr, weight_decay = self.weight_decay)
          return optimizer
 
 
