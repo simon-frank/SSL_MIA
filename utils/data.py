@@ -49,12 +49,12 @@ def get_data_finetuning(config):
 
     make_rgb = transforms.Compose([
     transforms.Grayscale(num_output_channels=3),  
-    config['transform'],])
-    data = MIMeta(config['data']['path'], config['evaluation']['domain'], config['evaluation']['task'])
+    transforms.ToTensor(),])
+    data = MIMeta(config['data']['path'], config['evaluation']['domain'], config['evaluation']['task'], transform=make_rgb)
 
-    litdata = LightlyDataset.from_torch_dataset(data, transform=make_rgb)
+    #litdata = LightlyDataset.from_torch_dataset(data, transform=make_rgb)
 
-    data_splits = torch.utils.data.random_split(litdata, splits, generator = generator)
+    data_splits = torch.utils.data.random_split(data, splits, generator = generator)
 
     return data_splits
 
