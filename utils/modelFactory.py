@@ -33,10 +33,16 @@ def createModel(config: dict)-> nn.Module:
 
 def createFinetuningModel(config)->nn.Module:
     # get pretrained model
-    model = loadModel(config)
-    model.eval()
+    if config['finetuning']['pretrained']:
+        backbone = torchvision.models.resnet18(pre_trained=True)
+        backbone.fc = nn.Identity()
+        backbone.eval()
+    else:
+        model = loadModel(config)
+        model.eval()
+        backbone = model.backbone
     # freeze backbone
-    finetuningModel = Base(model.backbone, ReadoutHead(512, config['finetuning']['output_size']), config)
+    finetuningModel = Base(backbone, ReadoutHead(512, config['finetuning']['output_size']), config)
     return finetuningModel
 
 def loadFinetuningModel(config)-> nn.Module:
