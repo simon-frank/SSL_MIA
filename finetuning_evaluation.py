@@ -1,5 +1,5 @@
-from utils.modelFactory import createFinetuningModel
-from utils.data import get_data_pretraining, load_config, get_data_finetuning, load_config, loadFinetuningModel, calculate_label_counts
+from utils.modelFactory import createFinetuningModel, loadFinetuningModel
+from utils.data import get_data_pretraining, load_config, get_data_finetuning, load_config, calculate_label_counts
 import torch
 
 
@@ -21,6 +21,8 @@ def main():
     
     print('Class balance:{0}'.format(calculate_label_counts(test)))
     test_loss = 0.0
+    total = 0
+    correct = 0
     criterion = torch.nn.CrossEntropyLoss()
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     with torch.no_grad():  # Disable gradient calculation during evaluation

@@ -81,7 +81,7 @@ Helper function to calculate the balance in the dataset
 
 
 def calculate_label_counts(dataset):
-    label_counts = torch.zeros(len(dataset.classes))
+    label_counts = torch.zeros(11)
 
     for _, label in dataset:
         label_counts[label] += 1
