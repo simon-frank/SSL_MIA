@@ -32,3 +32,8 @@ pretraining:
       input_size: 512
       hidden_size: 2048
       output_size: 2048
+finetuning:
+  lr: 0.0001
+  epochs: 100
+  output_size: 11
+  name: 'firstrunfinetuning'
