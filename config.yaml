@@ -33,9 +33,10 @@ pretraining:
       hidden_size: 2048
       output_size: 2048
 finetuning:
-  trainsplit : 0.1
+  pretrained: True
+  trainsplit : 1
   lr: 0.0001
-  epochs: 100
+  epochs: 1000
   output_size: 11
-  name: 'firstrunfinetuning'
+  name: 'finetuningpretraine_1'
   modelpath: '/home/franksim/SSL_MIA/trained_models/firstrunfinetuning/epoch=995-step=20916.ckpt'
