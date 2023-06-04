@@ -54,9 +54,12 @@ def get_data_finetuning(config):
 
     #litdata = LightlyDataset.from_torch_dataset(data, transform=make_rgb)
 
-    data_splits = torch.utils.data.random_split(data, splits, generator = generator)
+    train, val, test = torch.utils.data.random_split(data, splits, generator = generator)
 
-    return data_splits
+    traindata = config['finetuning']['trainsplit']
+    train_splits =[traindata, 1-traindata ]
+    train,_ = torch.utils.data.random_split(train, train_splits, generator = generator)
+    return train, val, test
 
 """
 Helper function to load the config file

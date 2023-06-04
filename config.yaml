@@ -33,6 +33,7 @@ pretraining:
       hidden_size: 2048
       output_size: 2048
 finetuning:
+  trainsplit : 0.1
   lr: 0.0001
   epochs: 100
   output_size: 11
