@@ -34,7 +34,7 @@ pretraining:
       output_size: 2048
 finetuning:
   pretrained: True
-  trainsplit : 1
+  trainsplit: 1
   lr: 0.0001
   epochs: 1000
   output_size: 11

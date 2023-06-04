@@ -34,7 +34,7 @@ def createModel(config: dict)-> nn.Module:
 def createFinetuningModel(config)->nn.Module:
     # get pretrained model
     if config['finetuning']['pretrained']:
-        backbone = torchvision.models.resnet18(pre_trained=True)
+        backbone = torchvision.models.resnet18(pretrained=True)
         backbone.fc = nn.Identity()
         backbone.eval()
     else:
