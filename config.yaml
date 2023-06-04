@@ -37,3 +37,4 @@ finetuning:
   epochs: 100
   output_size: 11
   name: 'firstrunfinetuning'
+  modelpath: '/home/franksim/SSL_MIA/trained_models/firstrunfinetuning/epoch=99-step=8000.ckpt'

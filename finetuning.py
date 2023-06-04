@@ -21,7 +21,7 @@ def main():
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     checkpoint_callback = ModelCheckpoint(
-        dirpath=save_path
+        dirpath=save_path,
         save_top_k=5,  # Set the number of models to save
     mode='min',  # 'min' or 'max' depending on the metric being tracked
     monitor='val_loss',)
