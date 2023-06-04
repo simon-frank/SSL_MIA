@@ -74,3 +74,16 @@ def load_config(path):
         config['transform'] = SimCLRTransform(input_size = config['img_size'])
 
     return config
+
+"""
+Helper function to calculate the balance in the dataset
+"""
+
+
+def calculate_label_counts(dataset):
+    label_counts = torch.zeros(len(dataset.classes))
+
+    for _, label in dataset:
+        label_counts[label] += 1
+
+    return label_counts
