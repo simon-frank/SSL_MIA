@@ -40,6 +40,7 @@ def createFinetuningModel(config)->nn.Module:
     return finetuningModel
 
 def loadFinetuningModel(config)-> nn.Module:
-    model = Base.load_from_checkpoint(config["finetuning"]["modelpath"], backbone= loadModel(config),ReadoutHead = ReadoutHead(512, config['finetuning']['output_size']),config=config)
+    backbone = loadModel(config).backbone
+    model = Base.load_from_checkpoint(config["finetuning"]["modelpath"], backbone= backbone,ReadoutHead = ReadoutHead(512, config['finetuning']['output_size']),config=config)
     model.eval()
     return model
