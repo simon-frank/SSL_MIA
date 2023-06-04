@@ -1,7 +1,8 @@
 import torch.nn as nn
 from models.barlowtwins import BarlowTwinsLit
 import torchvision
-
+from nn.readoutHead import ReadoutHead
+from models.base import Base
 """
 Factory for creating models used for the pretrained training
 """
@@ -28,3 +29,17 @@ def createModel(config: dict)-> nn.Module:
 
     else:
         raise ValueError("No valid model name given")
+    
+
+def createFinetuningModel(config)->nn.Module:
+    # get pretrained model
+    model = loadModel(config)
+    model.eval()
+    # freeze backbone
+    finetuningModel = Base(model.backbone, ReadoutHead(512, config['finetuning']['output_size']), config)
+    return finetuningModel
+
+def loadFinetuningModel(config)-> nn.Module:
+    model = Base.load_from_checkpoint(config["finetuning"]["modelpath"], backbone= loadModel(config),ReadoutHead = ReadoutHead(512, config['finetuning']['output_size']),config=config)
+    model.eval()
+    return model
