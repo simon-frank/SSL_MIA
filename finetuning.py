@@ -21,11 +21,18 @@ def main():
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     checkpoint_callback = ModelCheckpoint(
-        dirpath=save_path)
+        dirpath=save_path
+        save_top_k=5,  # Set the number of models to save
+    mode='min',  # 'min' or 'max' depending on the metric being tracked
+    monitor='val_loss',)
 
 
-    dataloader = torch.utils.data.DataLoader(
+    dataloader_training = torch.utils.data.DataLoader(
             train,
+            64,
+            shuffle = True)
+    dataloader_val= torch.utils.data.DataLoader(
+            val,
             64,
             shuffle = True)
     accelerator = 'gpu' if torch.cuda.is_available() else 'cpu'
@@ -36,7 +43,7 @@ def main():
         callbacks=[checkpoint_callback],
         log_every_n_steps=15,
     )
-    trainer.fit(model= model, train_dataloaders=dataloader)
+    trainer.fit(model= model, train_dataloaders=dataloader_training, val_dataloaders=dataloader_val)
 
 if __name__ == '__main__':
     main()  

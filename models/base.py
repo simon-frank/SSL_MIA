@@ -41,6 +41,27 @@ class Base(pl.LightningModule):
     x = self.readoutHead(self.backbone(x))
     return x
   
+
+  def calc_accuracy(self, y_hat, y):
+    _, predicted_labels = torch.max(y_hat, dim=1)
+    
+    # Compare predicted labels with ground truth labels
+    correct = (predicted_labels == y).sum().item()
+    total = y.size(0)
+    
+    # Calculate accuracy
+    accuracy = correct / total * 100.0
+    return accuracy
+
+  def validation_step(self, batch, batch_idx):
+    # Validation logic
+    x, y = batch
+    y_hat = self.forward(x)
+    loss = self.loss(y_hat, y)
+    self.log('val_loss', loss, prog_bar=True)  # Log the validation loss
+    self.log('val_acc', self.calc_accuracy(y_hat, y), prog_bar=True)  # Log the validation accuracy
+    return loss
+  
   def training_step(self, batch, batch_index):
     x,y = batch
     y_hat = self.forward(x)
