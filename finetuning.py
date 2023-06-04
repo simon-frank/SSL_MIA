@@ -5,6 +5,7 @@ import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
 import torch
 import os 
+
 def main():
 
     # Load config file
@@ -16,7 +17,7 @@ def main():
 
     train, val, test = get_data_finetuning(config)
 
-    save_path = os.path.join(config['savedmodel']['path'], config['savemodel']['name'])
+    save_path = os.path.join(config['savedmodel']['path'], config['finetuning']['name'])
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     checkpoint_callback = ModelCheckpoint(
