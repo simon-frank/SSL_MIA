@@ -37,7 +37,7 @@ def main():
             shuffle = True)
     accelerator = 'gpu' if torch.cuda.is_available() else 'cpu'
     trainer = pl.Trainer(
-        max_epochs = config['epochs'],
+        max_epochs = config['finetuning']['epochs'],
         devices='auto',
         accelerator=accelerator,
         callbacks=[checkpoint_callback],
