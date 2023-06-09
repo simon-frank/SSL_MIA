@@ -1,5 +1,6 @@
 import torch.nn as nn
 from models.barlowtwins import BarlowTwinsLit
+from models.vicregl import VicRegL
 import torchvision
 from nn.readoutHead import ReadoutHead
 from models.base import Base
@@ -26,6 +27,11 @@ def createModel(config: dict)-> nn.Module:
             backbone = torchvision.models.resnet18(zero_init_residual=True)
             backbone.fc = nn.Identity()
             return BarlowTwinsLit(backbone, config)
+    if config["pretraining"]["method"]["name"]== 'VicRegL':
+        if config["pretraining"]["method"]["backbone"]["name"] == 'resnet18':
+            backbone = torchvision.models.resnet18(zero_init_residual=True)
+            backbone.fc = nn.Identity()
+            return VicRegL(backbone, config)
 
     else:
         raise ValueError("No valid model name given")

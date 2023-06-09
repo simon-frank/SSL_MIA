@@ -4,6 +4,7 @@ import torch
 from torchvision import transforms
 import yaml
 from lightly.transforms.simclr_transform import SimCLRTransform
+from lightly.transforms.vicregl_transform import VICRegLTransform
 
 from utils.mimeta_warpper import MIMetaWrapper
 
@@ -75,7 +76,8 @@ def load_config(path):
         config['optimizer'] = torch.optim.Adam
     if config['transform'] == 'SimCLRTransform':
         config['transform'] = SimCLRTransform(input_size = config['img_size'])
-
+    if config['transform'] == 'VICRegLTransform':
+        config['transform'] = VICRegLTransform(n_local_views=0)
     return config
 
 """

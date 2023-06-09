@@ -17,14 +17,14 @@ weight_decay: 0.0000015
 epochs: 1000
 batch_size: 256
 img_size: 224
-transform: 'SimCLRTransform'
+transform: 'VICRegLTransform'
 savedmodel:
   path: 'trained_models'
   name: 'firstrun'
-usedMethod: 'BarlowTwins'
+usedMethod: 'VicRegL'
 pretraining:
   method: 
-    name: 'BarlowTwins'
+    name: 'VicRegL'
     backbone: 
       name: 'resnet18'
       pretrained: True
