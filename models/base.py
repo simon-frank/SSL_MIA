@@ -33,6 +33,7 @@ class Base(pl.LightningModule):
     super().__init__()
     self.lr = config['finetuning']['lr']
     self.optim = config['optimizer']
+    self.trainall = config['finetuning']['trainall']
     self.readoutHead = ReadoutHead
     self.backbone = backbone
     self.loss = nn.functional.cross_entropy
@@ -70,5 +71,8 @@ class Base(pl.LightningModule):
     return loss
   
   def configure_optimizers(self):
+    if self.trainall:
+      optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
+    else:
      optimizer = torch.optim.Adam(self.readoutHead.parameters(), lr=self.lr)
-     return optimizer
+    return optimizer
