@@ -74,5 +74,5 @@ class Base(pl.LightningModule):
     if self.trainall:
       optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
     else:
-     optimizer = torch.optim.Adam(self.readoutHead.parameters(), lr=self.lr)
+      optimizer = torch.optim.Adam(self.readoutHead.parameters(), lr=self.lr)
     return optimizer
