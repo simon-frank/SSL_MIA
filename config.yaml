@@ -10,12 +10,12 @@ data:
 evaluation:
   domain: 'Axial Organ Slices'
   task: 'organ label'
-  modelpath: '/home/franksim/SSL_MIA/trained_models/firstrun/epoch=999-step=8000.ckpt'
+  modelpath: '/home/krauseg/SSL_MIA/trained_models/firstrun/epoch=599-step=4800.ckpt'
 lr: 0.03
 optimizer: Adam
 weight_decay: 0.0000015
-epochs: 1000
-batch_size: 256
+epochs: 2000
+batch_size: 96
 img_size: 224
 transform: 'VICRegLTransform'
 savedmodel:
@@ -33,10 +33,10 @@ pretraining:
       hidden_size: 2048
       output_size: 2048
 finetuning:
-  pretrained: True
+  pretrained: False
   trainsplit: 1
   lr: 0.0001
   epochs: 1000
   output_size: 11
-  name: 'finetuningpretraine_1'
+  name: 'finetuningpretrained_1'
   modelpath: '/home/franksim/SSL_MIA/trained_models/firstrunfinetuning/epoch=995-step=20916.ckpt'

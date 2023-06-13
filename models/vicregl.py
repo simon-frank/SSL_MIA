@@ -16,21 +16,27 @@ class VicRegL(pl.LightningModule):
         self.optim = config['optimizer']
         self.average_pool = nn.AdaptiveAvgPool2d(output_size=(1, 1))
         self.criterion = VICRegLLoss()
-
+        self.config = config
         
     def forward(self, x):
+        # print('x:', x.shape)
         x = self.backbone(x)
-        y = self.average_pool(x).flatten(start_dim = 1)
+        # print(x.shape)
+        y = self.average_pool(x)
+        y = y.flatten(start_dim = 1)
         z = self.projection_head(y)
         y_local = x.permute(0,2,3,1) # (B, D, W, H) to (B, W, H, D)
         z_local = self.local_projection_head(y_local)
         return z,z_local
     
     def training_step(self, batch, batch_index):
-         (x1, x2),_,_ = batch
+        #  (x1, x2),_,_ = batch
+        #  print(self.config['transform'])
+
          views_and_grids = batch[0]
          views = views_and_grids[: len(views_and_grids) // 2]
          grids = views_and_grids[len(views_and_grids) // 2 :]
+        #  print(views[0].shape)
 
          features = [self.forward(view) for view in views]
 
