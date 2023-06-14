@@ -33,9 +33,13 @@ def createModel(config: dict)-> nn.Module:
 
 def createFinetuningModel(config)->nn.Module:
     # get pretrained model
-    if config['finetuning']['pretrained']:
+    if config['finetuning']['pretrained']== 'imagenet':
         if config["pretraining"]["method"]["backbone"]["name"] == 'resnet18':
             backbone = torchvision.models.resnet18(pretrained=True)
+            backbone.fc = nn.Identity()
+    elif config['finetuning']['pretrained']== 'None':
+        if config["pretraining"]["method"]["backbone"]["name"] == 'resnet18':
+            backbone = torchvision.models.resnet18(zero_init_residual=True)
             backbone.fc = nn.Identity()
     else:
         model = loadModel(config)
