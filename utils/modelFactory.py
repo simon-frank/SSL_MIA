@@ -34,12 +34,11 @@ def createModel(config: dict)-> nn.Module:
 def createFinetuningModel(config)->nn.Module:
     # get pretrained model
     if config['finetuning']['pretrained']:
-        backbone = torchvision.models.resnet18(pretrained=True)
-        backbone.fc = nn.Identity()
-        backbone.eval()
+        if config["pretraining"]["method"]["backbone"]["name"] == 'resnet18':
+            backbone = torchvision.models.resnet18(pretrained=True)
+            backbone.fc = nn.Identity()
     else:
         model = loadModel(config)
-        model.eval()
         backbone = model.backbone
     # freeze backbone
     finetuningModel = Base(backbone, ReadoutHead(512, config['finetuning']['output_size']), config)
