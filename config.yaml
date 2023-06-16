@@ -10,21 +10,21 @@ data:
 evaluation:
   domain: 'Axial Organ Slices'
   task: 'organ label'
-  modelpath: '/home/krauseg/SSL_MIA/trained_models/firstrun/epoch=599-step=4800.ckpt'
-lr: 0.03
+  modelpath: '/home/krauseg/SSL_MIA/trained_models/firstrun/epoch=1999-step=32000-v1.ckpt'
+lr: 0.0007
 optimizer: Adam
-weight_decay: 0.0000015
+weight_decay: 0.03
 epochs: 2000
-batch_size: 96
+batch_size: 64
 img_size: 224
-transform: 'VICRegLTransform'
+transform: 'MoCoTransform'
 savedmodel:
   path: 'trained_models'
   name: 'firstrun'
-usedMethod: 'VicRegL'
+usedMethod: 'MoCo'
 pretraining:
   method: 
-    name: 'VicRegL'
+    name: 'MoCo'
     backbone: 
       name: 'resnet18'
       pretrained: True
@@ -35,7 +35,7 @@ pretraining:
 finetuning:
   pretrained: False
   trainsplit: 1
-  lr: 0.0001
+  lr: 0.007
   epochs: 1000
   output_size: 11
   name: 'finetuningpretrained_1'

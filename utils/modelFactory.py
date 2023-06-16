@@ -1,6 +1,7 @@
 import torch.nn as nn
 from models.barlowtwins import BarlowTwinsLit
 from models.vicregl import VicRegL
+from models.moco import MoCo
 import torchvision
 from nn.readoutHead import ReadoutHead
 from models.base import Base
@@ -11,40 +12,62 @@ Factory for creating models used for the pretrained training
 
 def loadModel(config: dict)-> nn.Module:
     #define backbone
-    if config["pretraining"]["method"]["name"]== 'BarlowTwins':
-        if config["pretraining"]["method"]["backbone"]["name"] == 'resnet18':
-            backbone = torchvision.models.resnet18(zero_init_residual=True)
-            backbone.fc = nn.Identity()
-            return BarlowTwinsLit.load_from_checkpoint(config["evaluation"]["modelpath"], backbone=backbone, config=config)
-    elif config["pretraining"]["method"]["name"]== 'VicRegL':
-        backbone = None
-        if config["pretraining"]["method"]["backbone"]["name"] == 'resnet18':
-            backbone = torchvision.models.resnet18(zero_init_residual=True)
-        elif config["pretraining"]["method"]["backbone"]["name"] == 'resnet50': 
-            backbone = torchvision.models.resnet50(zero_init_residual=True)
+
+    backbone = None
+    backbone_name = config["pretraining"]["method"]["backbone"]["name"]
+
+    if backbone_name == 'resnet18':
+        backbone = torchvision.models.resnet18(zero_init_residual=True)
+
+    elif backbone_name == 'resnet50':
+        backbone = torchvision.models.resnet50(zero_init_residual=True)
+    
+    else:
+        raise ValueError("No valid backbone name given")
+
+    method_name = config["pretraining"]["method"]["name"]
+
+    if method_name== 'BarlowTwins':
+        backbone.fc = nn.Identity()
+        return BarlowTwinsLit.load_from_checkpoint(config["evaluation"]["modelpath"], backbone=backbone, config=config)
+    elif method_name== 'VicRegL':
         backbone = nn.Sequential(*list(backbone.children())[:-2])
         return VicRegL.load_from_checkpoint(config["evaluation"]["modelpath"], backbone = backbone, config = config)
+    if method_name== 'MoCo':
+        backbone.fc = nn.Identity()
+        return MoCo.load_from_checkpoint(config["evaluation"]["modelpath"], backbone=backbone, config=config)
     else:
         raise ValueError("No valid model name given")
 
 def createModel(config: dict)-> nn.Module:
     #define backbone
-    if config["pretraining"]["method"]["name"]== 'BarlowTwins':
-        if config["pretraining"]["method"]["backbone"]["name"] == 'resnet18':
-            backbone = torchvision.models.resnet18(zero_init_residual=True)
-            backbone.fc = nn.Identity()
-            return BarlowTwinsLit(backbone, config)
-    elif config["pretraining"]["method"]["name"]== 'VicRegL':
-        backbone = None
-        if config["pretraining"]["method"]["backbone"]["name"] == 'resnet18':
-            backbone = torchvision.models.resnet18(zero_init_residual=True)
-        elif config["pretraining"]["method"]["backbone"]["name"] == 'resnet50':
-            backbone = torchvision.models.resnet50(zero_init_residual=True)
+    backbone = None
+    backbone_name = config["pretraining"]["method"]["backbone"]["name"]
+
+    if backbone_name == 'resnet18':
+        backbone = torchvision.models.resnet18(zero_init_residual=True)
+
+    elif backbone_name == 'resnet50':
+        backbone = torchvision.models.resnet50(zero_init_residual=True)
+    
+    else:
+        raise ValueError("No valid backbone name given")
+
+    # define method
+    method_name = config["pretraining"]["method"]["name"]
+    if method_name == 'BarlowTwins':      
+        backbone.fc = nn.Identity()
+        return BarlowTwinsLit(backbone, config)
+
+    elif method_name == 'VicRegL':
         backbone = nn.Sequential(*list(backbone.children())[:-2])
         return VicRegL(backbone, config)
 
-    else:
-        raise ValueError("No valid model name given")
+    elif method_name == 'MoCo':
+        backbone.fc = nn.Identity()
+        return MoCo(backbone, config)
+    
+    raise ValueError("No valid model name given")
     
 
 def createFinetuningModel(config)->nn.Module:

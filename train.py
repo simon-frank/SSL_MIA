@@ -3,7 +3,6 @@ import os
 import torch
 import torch.nn as nn
 
-from models.barlowtwins import BarlowTwinsLit
 from utils.data import get_data_pretraining, load_config
 from utils.modelFactory import createModel
 #from utils.custommultiviewcollatefunction import CustomMultiViewCollateFunction
@@ -66,7 +65,7 @@ def main():
         use_distributed_sampler = True,
         callbacks=[checkpoint_callback],
         log_every_n_steps=15,
-        # precision = 16
+       # precision = 16
     )
     trainer.fit(model= model, train_dataloaders=dataloader)
 
