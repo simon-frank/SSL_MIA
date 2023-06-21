@@ -15,7 +15,7 @@ class VicRegL(pl.LightningModule):
         self.weight_decay = config['weight_decay']
         self.optim = config['optimizer']
         self.average_pool = nn.AdaptiveAvgPool2d(output_size=(1, 1))
-        self.criterion = VICRegLLoss()
+        self.criterion = VICRegLLoss(alpha = 1)
         self.config = config
         
     def forward(self, x):

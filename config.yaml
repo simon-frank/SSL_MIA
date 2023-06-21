@@ -15,16 +15,16 @@ lr: 0.0007
 optimizer: Adam
 weight_decay: 0.03
 epochs: 2000
-batch_size: 64
+batch_size: 192
 img_size: 224
-transform: 'MoCoTransform'
+transform: 'VICRegLTransform'
 savedmodel:
   path: 'trained_models'
   name: 'firstrun'
-usedMethod: 'MoCo'
+usedMethod: 'VicRegL'
 pretraining:
   method: 
-    name: 'MoCo'
+    name: 'VicRegL'
     backbone: 
       name: 'resnet18'
       pretrained: True
