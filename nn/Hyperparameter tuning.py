@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
 
 import tensorflow as tf
 from tensorflow.keras.applications import ResNet50
@@ -101,8 +96,6 @@ grid_search.fit(train_generator, callbacks=[early_stopping, lr_scheduler])
 #Print the best hyperparameters found
 print("Best Hyperparameters:", grid_search.best_params_)
 
-
-# In[ ]:
 
 
 
