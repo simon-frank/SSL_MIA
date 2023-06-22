@@ -49,7 +49,7 @@ def barlow_twins_loss(z1, z2, lambd=0.005):
     loss = tf.reduce_sum(tf.square(c)) * lambd
     return loss
 
-#Data augmentation            #To improve performance
+#Data augmentation            #To improve performance..Not sure about this, but the code runs smooth
 image_augmentation = ImageDataGenerator(
     rotation_range=30,
     horizontal_flip=True,
@@ -61,7 +61,7 @@ image_augmentation.rescale = 1.0 / 255.0  #Pixel values are rescaled to the rang
 #Load and augment the training dataset
 train_generator = image_augmentation.flow_from_directory(
     '/Users/dr.elsherif/Downloads/lung_colon_image_set/colon_image_sets',
-    target_size=(768, 768),
+    target_size=(768, 768),   #ResNet uses 224x224 but our colon set has 768X768 pixel.
     batch_size=32,
     class_mode='categorical',
     shuffle=False
