@@ -1,7 +1,7 @@
 from utils.modelFactory import createFinetuningModel, loadFinetuningModel
 from utils.data import get_data_pretraining, load_config, get_data_finetuning, load_config, calculate_label_counts
 import torch
-
+import numpy as np
 
 def main():
     # Load config file
@@ -18,7 +18,11 @@ def main():
             test,
             64,
             shuffle = False)
-    
+    # create confusion matrix
+    num_classes = config['finetuning']['output_size']
+    confusion_matrix = np.zeros((num_classes, num_classes), dtype=np.int)
+
+
     print('Class balance:{0}'.format(calculate_label_counts(test)))
     test_loss = 0.0
     total = 0
@@ -38,6 +42,8 @@ def main():
             
             # Calculate the accuracy
             _, predicted = torch.max(outputs, 1)
+            for true_label, predicted_label in zip(targets, predicted):
+                confusion_matrix[true_label][predicted_label] += 1
             total += targets.size(0)
             correct += (predicted == targets).sum().item()
 
@@ -47,5 +53,6 @@ def main():
 
     print(f"Test loss: {test_loss:.4f}")
     print(f"Accuracy: {accuracy:.2f}")
+    print(f'Cofusion matrix: {confusion_matrix}')
 if __name__ == '__main__':
     main()
