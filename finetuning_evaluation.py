@@ -2,10 +2,15 @@ from utils.modelFactory import createFinetuningModel, loadFinetuningModel
 from utils.data import get_data_pretraining, load_config, get_data_finetuning, load_config, calculate_label_counts
 import torch
 import numpy as np
+import matplotlib.pyplot as plt
+import os
+
 
 def main():
     # Load config file
     config = load_config('config.yaml')
+
+
 
     # create model
     model = loadFinetuningModel(config)
@@ -20,7 +25,7 @@ def main():
             shuffle = False)
     # create confusion matrix
     num_classes = config['finetuning']['output_size']
-    confusion_matrix = np.zeros((num_classes, num_classes), dtype=np.int)
+    confusion_matrix = np.zeros((num_classes, num_classes))
 
 
     print('Class balance:{0}'.format(calculate_label_counts(test)))
@@ -54,5 +59,23 @@ def main():
     print(f"Test loss: {test_loss:.4f}")
     print(f"Accuracy: {accuracy:.2f}")
     print(f'Cofusion matrix: {confusion_matrix}')
+    normalized_confusion_matrix = confusion_matrix/ confusion_matrix.sum(axis=1)[:, np.newaxis]  
+    print(f'Normalized cofusion matrix: {normalized_confusion_matrix}')
+    # Plot the normalized confusion matrix
+    plt.figure(figsize=(10, 8))
+    plt.imshow(normalized_confusion_matrix, interpolation='nearest', cmap=plt.cm.Blues)
+    plt.title('Normalized Confusion Matrix')
+    plt.colorbar()
+    tick_marks = np.arange(num_classes)
+    plt.xticks(tick_marks, range(1,num_classes+1))
+    plt.yticks(tick_marks, range(1,num_classes+1))
+    plt.xlabel('Predicted Class')
+    plt.ylabel('True Class')
+    plt.tight_layout()
+
+    save_directory = os.path.dirname(config['finetuning']['modelpath'])
+
+    # Save the plot as a PNG file
+    plt.savefig(os.path.join(save_directory,'confusion_matrix.png'))
 if __name__ == '__main__':
     main()
