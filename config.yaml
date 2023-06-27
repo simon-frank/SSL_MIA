@@ -1,30 +1,26 @@
 data: 
   path: '/graphics/scratch2/datasets/practical_course/MIMeta/data'
   datasets:
-    - domain: 'organs_axial'
-      task: 'organ label'
-    - domain: 'organs_coronal'
-      task: 'organ label'
-    - domain: 'organs_sagittal'
-      task: 'organ label'
+    - domain: 'crc'
+      task: 'tissue class'
 evaluation:
-  domain: 'Axial Organ Slices'
-  task: 'organ label'
-  modelpath: '/home/krauseg/SSL_MIA/trained_models/firstrun/epoch=1999-step=32000-v1.ckpt'
-lr: 0.0007
+  domain: 'Colorectal Cancer'
+  task: 'tissue class'
+  modelpath: '/graphics/scratch2/datasets/practical_course/MIMeta/trained_models/crc/barlowpretrained/epoch=999-step=84000.ckpt'
+lr: 0.03
 optimizer: Adam
 weight_decay: 0.03
-epochs: 2000
-batch_size: 192
+epochs: 1000
+batch_size: 64
 img_size: 224
-transform: 'VICRegLTransform'
+transform: 'SimCLRTransform'
 savedmodel:
   path: 'trained_models'
   name: 'firstrun'
-usedMethod: 'VicRegL'
+usedMethod: 'BarlowTwins'
 pretraining:
   method: 
-    name: 'VicRegL'
+    name: 'BarlowTwins'
     backbone: 
       name: 'resnet18'
       pretrained: True
@@ -35,8 +31,8 @@ pretraining:
 finetuning:
   pretrained: False
   trainsplit: 1
-  lr: 0.007
+  lr: 0.03
   epochs: 1000
   output_size: 11
-  name: 'finetuningpretrained_1'
-  modelpath: '/home/franksim/SSL_MIA/trained_models/firstrunfinetuning/epoch=995-step=20916.ckpt'
+  name: 'finetuning_readouthead_100'
+  modelpath: '/home/krauseg/SSL_MIA/trained_models/finetuning_readouthead_50/epoch=105-step=17808.ckpt'

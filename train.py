@@ -65,7 +65,7 @@ def main():
         use_distributed_sampler = True,
         callbacks=[checkpoint_callback],
         log_every_n_steps=15,
-       # precision = 16
+        precision = 16
     )
     trainer.fit(model= model, train_dataloaders=dataloader)
 
