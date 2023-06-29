@@ -30,10 +30,12 @@ def main():
     dataloader_training = torch.utils.data.DataLoader(
             train,
             64,
+            num_workers = 8,
             shuffle = True)
     dataloader_val= torch.utils.data.DataLoader(
             val,
             64,
+            num_workers = 8,
             shuffle = True)
     accelerator = 'gpu' if torch.cuda.is_available() else 'cpu'
     trainer = pl.Trainer(
