@@ -10,6 +10,7 @@ from lightly.transforms.moco_transform import MoCoV2Transform
 from utils.mimeta_warpper import MIMetaWrapper
 
 
+import numpy as np
 from matplotlib import pyplot as plt
 from tqdm import tqdm
 
@@ -124,7 +125,7 @@ def confusion_matrix(targets, predictions, mode = 'percent'):
             confusion_matrix[int(t.item()),int(p.item())] += 1
         
         if mode == 'percent':
-            confusion_matrix = confusion_matrix/confusion_matrix.sum(axis =1) * 100
+            confusion_matrix = confusion_matrix/confusion_matrix.sum(axis =1) *100
 
         return confusion_matrix
 
@@ -147,6 +148,47 @@ def print_confusion_matrix(confusion_matrix):
         print(horizontal)
     print()
 
-def plot_confusion_matrix(confusion_matrix):
-    plt.hist2d(confusion_matrix.numpy())
-    plt.show()
+def plot_confusion_matrix(confusion_matrix,display_labels = None, cmap = 'viridis'):
+    """
+    inspired by sklearn.metrics.ConfusionMatrixDisplay
+    """
+    fig, ax = plt.subplots()
+    
+    num_classes = len(confusion_matrix)
+
+    if display_labels == None:
+        display_labels = np.arange(num_classes)
+    
+    default_im_kw = dict(interpolation="nearest", cmap=cmap)
+    
+    im = ax.imshow(confusion_matrix, **default_im_kw)
+
+    cmap_min, cmap_max = im.cmap(0), im.cmap(1.0)
+    
+
+    text = np.empty_like(confusion_matrix)
+
+    threshold = (confusion_matrix.max() + confusion_matrix.min()) / 2
+
+    for i in range(num_classes):
+        for j in range(num_classes):
+            color = cmap_min if confusion_matrix[i,j] > threshold else cmap_max
+            default_text_kwargs = dict(ha="center", va="center", color = color)
+
+            text_cell = str(round(confusion_matrix[i,j].item(), 2))
+            ax.text(j, i, text_cell, **default_text_kwargs)
+
+
+    ax.set( xticks = np.arange(num_classes),
+            yticks = np.arange(num_classes),
+            xticklabels = display_labels,
+            yticklabels = display_labels,
+            xlabel = 'Groundtruth',
+            ylabel = 'Prediction')
+    ax.set_ylim((num_classes - 0.5, -0.5))
+
+    fig.colorbar(im, ax=ax, label = 'in %')
+    
+    plt.savefig('confusion_matrix.png')
+
+        
