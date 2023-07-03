@@ -123,9 +123,11 @@ def confusion_matrix(targets, predictions, mode = 'percent'):
     with torch.no_grad():
         for t,p in zip(targets, predictions):
             confusion_matrix[int(t.item()),int(p.item())] += 1
-        
+                
         if mode == 'percent':
-            confusion_matrix = confusion_matrix/confusion_matrix.sum(axis =1) *100
+            for i,div in enumerate(confusion_matrix.sum(axis = 1)):
+                confusion_matrix[i] /= div
+            confusion_matrix *= 100
 
         return confusion_matrix
 

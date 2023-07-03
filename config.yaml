@@ -1,5 +1,5 @@
 data: 
-  path: '/graphics/scratch2/datasets/practical_course/MIMeta/data'
+  path: '/graphics/scratch3/students/krauseg/data'
   datasets:
     - domain: 'crc'
       task: 'tissue class'
@@ -29,11 +29,11 @@ pretraining:
       hidden_size: 2048
       output_size: 2048
 finetuning:
-  pretrained: True 
-  trainall: True
+  pretrained: False 
+  trainall: False
   trainsplit: 1
   lr: 0.03
   epochs: 1000
   output_size: 11
-  name: 'finetuningall'
-  modelpath: '/home/krauseg/SSL_MIA/trained_models/finetuning_readouthead_50/epoch=105-step=17808.ckpt'
+  name: 'finetuning_readouthead_100'
+  modelpath: '/home/krauseg/SSL_MIA/trained_models/finetune_all_10/epoch=34-step=4690.ckpt'
