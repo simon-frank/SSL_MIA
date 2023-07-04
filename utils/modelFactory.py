@@ -19,7 +19,11 @@ def loadModel(config: dict)-> nn.Module:
             backbone = torchvision.models.vit_b_16()
             backbone.fc = nn.Identity()
             return BarlowTwinsLit.load_from_checkpoint(config["evaluation"]["modelpath"], backbone=backbone, config=config)
-
+        if config["pretraining"]["method"]["backbone"]["name"] == 'efficientnet_b2':
+            backbone = torchvision.models.efficientnet_b2(zero_init_residual=True)
+            backbone.fc = nn.Identity()
+            return BarlowTwinsLit.load_from_checkpoint(config["evaluation"]["modelpath"], backbone=backbone, config=config)
+       
     else:
         raise ValueError("No valid model name given")
 

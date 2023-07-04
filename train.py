@@ -39,7 +39,8 @@ def main():
             collate_fn = collate_fn, 
             num_workers=4, 
             shuffle = True)
-
+            
+    print("Debugging")
     # Create a ModelCheckpoint callback
     #checkpoint_callback = ModelCheckpoint(
     #    dirpath='path/to/save/directory',
@@ -49,7 +50,7 @@ def main():
     #    monitor='val_loss',  # Metric to monitor for saving models
     #)
 
-    save_path = os.path.join(config['savedmodel']['path'], config['savemodel']['name'])
+    save_path = os.path.join(config['savedmodel']['path'], config['savedmodel']['name'])
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     checkpoint_callback = ModelCheckpoint(
@@ -59,10 +60,14 @@ def main():
     accelerator = 'gpu' if torch.cuda.is_available() else 'cpu'
     trainer = pl.Trainer(
         max_epochs = config['epochs'],
-        devices='auto',
+        devices=[2],#'auto',
         accelerator=accelerator,
+        strategy = 'ddp',
+        sync_batchnorm = True,
+        use_distributed_sampler = True,
         callbacks=[checkpoint_callback],
         log_every_n_steps=15,
+        precision = '16-mixed'#16
     )
     trainer.fit(model= model, train_dataloaders=dataloader)
 
