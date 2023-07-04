@@ -3,6 +3,8 @@ from utils.data import get_data_pretraining, load_config, get_data_finetuning
 from utils.data import load_config
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
+from pytorch_lightning.callbacks.early_stopping import EarlyStopping
+
 import torch
 import os 
 
@@ -42,7 +44,7 @@ def main():
         max_epochs = config['finetuning']['epochs'],
         devices='auto',
         accelerator=accelerator,
-        callbacks=[checkpoint_callback],
+        callbacks=[checkpoint_callback, EarlyStopping(monitor="val_loss", patience=20, verbose=False, mode="min")],
         log_every_n_steps=15,
     )
     trainer.fit(model= model, train_dataloaders=dataloader_training, val_dataloaders=dataloader_val)

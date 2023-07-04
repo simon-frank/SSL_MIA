@@ -58,7 +58,7 @@ def main():
     print(f"Accuracy: {accuracy:.2f}")
     print()
     print_confusion_matrix(confusion_matrix(targs, pred))
-    # plot_confusion_matrix(confusion_matrix(targs, pred))
+    plot_confusion_matrix(confusion_matrix(targs, pred))
 
 if __name__ == '__main__':
     main()
