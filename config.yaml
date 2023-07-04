@@ -1,21 +1,21 @@
 data: 
-  path: '/graphics/scratch2/datasets/practical_course/MIMeta/data'
+  path: '/graphics/scratch3/students/krauseg/data' #'/graphics/scratch2/datasets/practical_course/MIMeta/data'
   datasets:
-    - domain: 'organs_axial'
-      task: 'organ label'
-    - domain: 'organs_coronal'
-      task: 'organ label'
-    - domain: 'organs_sagittal'
-      task: 'organ label'
+    - domain: 'crc'
+      task: 'tissue class'
+   # - domain: 'organs_coronal'
+   #   task: 'organ label'
+   # - domain: 'organs_sagittal'
+   #   task: 'organ label'
 evaluation:
-  domain: 'Axial Organ Slices'
-  task: 'organ label'
+  domain: 'Colorectal Cancer'
+  task: 'tissue class' #'organ label'
   modelpath: '/home/franksim/SSL_MIA/trained_models/firstrun/epoch=999-step=8000.ckpt'
 lr: 0.03
 optimizer: Adam
 weight_decay: 0.0000015
 epochs: 1000
-batch_size: 256
+batch_size: 128
 img_size: 224
 transform: 'SimCLRTransform'
 savedmodel:
@@ -26,7 +26,7 @@ pretraining:
   method: 
     name: 'BarlowTwins'
     backbone: 
-      name: 'resnet18'
+      name: 'resnet18' #'efficientnet_b2' #'vit_b_16' # 
       pretrained: True
     projection_head:
       input_size: 512

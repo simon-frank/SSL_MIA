@@ -15,6 +15,10 @@ def loadModel(config: dict)-> nn.Module:
             backbone = torchvision.models.resnet18(zero_init_residual=True)
             backbone.fc = nn.Identity()
             return BarlowTwinsLit.load_from_checkpoint(config["evaluation"]["modelpath"], backbone=backbone, config=config)
+        if config["pretraining"]["method"]["backbone"]["name"] == 'vit_b_16':
+            backbone = torchvision.models.vit_b_16()
+            backbone.fc = nn.Identity()
+            return BarlowTwinsLit.load_from_checkpoint(config["evaluation"]["modelpath"], backbone=backbone, config=config)
 
     else:
         raise ValueError("No valid model name given")
@@ -24,6 +28,14 @@ def createModel(config: dict)-> nn.Module:
     if config["pretraining"]["method"]["name"]== 'BarlowTwins':
         if config["pretraining"]["method"]["backbone"]["name"] == 'resnet18':
             backbone = torchvision.models.resnet18(zero_init_residual=True)
+            backbone.fc = nn.Identity()
+            return BarlowTwinsLit(backbone, config)
+        if config["pretraining"]["method"]["backbone"]["name"] == 'vit_b_16':
+            backbone = torchvision.models.vit_b_16()
+            backbone.fc = nn.Identity()
+            return BarlowTwinsLit(backbone, config)
+        if config["pretraining"]["method"]["backbone"]["name"] == 'efficientnet_b2':
+            backbone = torchvision.models.efficientnet_b2()
             backbone.fc = nn.Identity()
             return BarlowTwinsLit(backbone, config)
 
@@ -36,6 +48,12 @@ def createFinetuningModel(config)->nn.Module:
     if config['finetuning']['pretrained']:
         if config["pretraining"]["method"]["backbone"]["name"] == 'resnet18':
             backbone = torchvision.models.resnet18(pretrained=True)
+            backbone.fc = nn.Identity()
+        if config["pretraining"]["method"]["backbone"]["name"] == 'vit_b_16':
+            backbone = torchvision.models.vit_b_16(pretrained=True)
+            backbone.fc = nn.Identity()
+        if config["pretraining"]["method"]["backbone"]["name"] == 'efficientnet_b2':
+            backbone = torchvision.models.efficientnet_b2(pretrained=True)
             backbone.fc = nn.Identity()
     else:
         model = loadModel(config)
