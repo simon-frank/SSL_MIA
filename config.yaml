@@ -1,5 +1,5 @@
 data: 
-  path: '/graphics/scratch2/datasets/practical_course/MIMeta/data'
+  path: '/graphics/scratch2_recovery/datasets/practical_course/MIMeta/data'
   datasets:
     - domain: 'organs_axial'
       task: 'organ label'
@@ -8,7 +8,7 @@ data:
     - domain: 'organs_sagittal'
       task: 'organ label'
 evaluation:
-  domain: 'Axial Organ Slices'
+  domain: 'Coronal Organ Slices'
   task: 'organ label'
   modelpath: '/home/franksim/SSL_MIA/trained_models/firstrun/epoch=999-step=8000.ckpt'
 lr: 0.03
@@ -33,11 +33,12 @@ pretraining:
       hidden_size: 2048
       output_size: 2048
 finetuning:
-  pretrained: 'None'
+  pretrained: 'None' # 'imagenet' or 'None' or 'barlowtwins '
   trainall: True
-  trainsplit: 1
-  lr: 0.001
-  epochs: 5000
+  trainsplit: 1 #[1, 0.5,0.25,0.1]
+  batch_size: 128
+  lr: 0.0001
+  epochs: 1# [10000, 10000, 10000, 10000]
   output_size: 11
-  name: 'notpretrained_finetuningall_1'
-  modelpath: '/home/franksim/SSL_MIA/trained_models/barlowpretrained_finetuningall_1/epoch=888-step=18669.ckpt'
+  name: ['coronal_not_pretrained_train_all_1', 'coronal_not_pretrained_train_all_0_5', 'coronal_not_pretrained_train_all_0_25', 'coronal_not_pretrained_train_all_0_1']
+  modelpath: '/home/franksim/SSL_MIA/trained_models/coronal_not_pretrained_train_all_0_1/epoch=8670-step=17342.ckpt'

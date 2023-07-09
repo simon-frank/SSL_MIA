@@ -50,6 +50,7 @@ def createFinetuningModel(config)->nn.Module:
 
 def loadFinetuningModel(config)-> nn.Module:
     backbone = loadModel(config).backbone
+    # all the weight are loaded from the pretrained model in config["finetuning"]["modelpath"]
     model = Base.load_from_checkpoint(config["finetuning"]["modelpath"], backbone= backbone,ReadoutHead = ReadoutHead(512, config['finetuning']['output_size']),config=config)
     model.eval()
     return model

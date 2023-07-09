@@ -1,5 +1,5 @@
 from utils.modelFactory import createFinetuningModel, loadFinetuningModel
-from utils.data import get_data_pretraining, load_config, get_data_finetuning, load_config, calculate_label_counts
+from utils.data import get_data_pretraining, load_config, get_data_finetuning, load_config, calculate_label_counts, save_performance
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
@@ -58,9 +58,8 @@ def main():
 
     print(f"Test loss: {test_loss:.4f}")
     print(f"Accuracy: {accuracy:.2f}")
-    print(f'Cofusion matrix: {confusion_matrix}')
+    
     normalized_confusion_matrix = confusion_matrix/ confusion_matrix.sum(axis=1)[:, np.newaxis]  
-    print(f'Normalized cofusion matrix: {normalized_confusion_matrix}')
     # Plot the normalized confusion matrix
     plt.figure(figsize=(10, 8))
     plt.imshow(normalized_confusion_matrix, interpolation='nearest', cmap=plt.cm.Blues)
@@ -74,7 +73,7 @@ def main():
     plt.tight_layout()
 
     save_directory = os.path.dirname(config['finetuning']['modelpath'])
-
+    save_performance(test_loss, accuracy, save_directory)
     # Save the plot as a PNG file
     plt.savefig(os.path.join(save_directory,'confusion_matrix.png'))
 if __name__ == '__main__':

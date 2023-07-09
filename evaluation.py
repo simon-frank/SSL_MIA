@@ -9,7 +9,7 @@ def main():
     config = load_config('config.yaml')
 
     # create model
-    model = loadModel(config)
+    model = loadFinetuningModel(config)
 
     #print(model)
 
