@@ -54,7 +54,7 @@ def main():
     
     # Load config file
     config = load_config('config.yaml')
-    if config['evaluation']['domain'] in ['organs_axial','organs_coronal','organs_sagittal']:
+    if config['evaluation']['domain'] in ['Axial Organ Slices','Coronal Organ Slices','Sagittal Organ Slices']:
         print("organ slices evaluation")
         dict = organ_slices_dict
         no_classes = 11
@@ -130,7 +130,7 @@ def main():
     #ax.scatter(query_vector[0], query_vector[1], label='Query Vector', color='green', marker='x')
     
     # Add labels and legend
-    plt.title("TSNE Projection of extracted feature vectors\n CRC data with Barlow Twins")
+    plt.title("TSNE Projection of Axial Organ Slices feature vectors\n with pretrained ImageNet model")
     ax.set_xlabel('TSNE dim 1')
     ax.set_ylabel('TSNE dim 2')
     
@@ -146,7 +146,7 @@ def main():
             marker='o',
         )
     ax.legend(fontsize='small',loc='upper right')
-    plt.savefig('new legend.png')
+    plt.savefig('_Axial Organ Slices - pretrained ImageNet model.png')
     
 
 
