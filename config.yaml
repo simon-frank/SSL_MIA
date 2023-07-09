@@ -41,4 +41,4 @@ finetuning:
   epochs: 1# [10000, 10000, 10000, 10000]
   output_size: 11
   name: ['coronal_not_pretrained_train_all_1', 'coronal_not_pretrained_train_all_0_5', 'coronal_not_pretrained_train_all_0_25', 'coronal_not_pretrained_train_all_0_1']
-  modelpath: '/home/franksim/SSL_MIA/trained_models/coronal_not_pretrained_train_all_0_1/epoch=8670-step=17342.ckpt'
+  modelpath: '/home/franksim/SSL_MIA/trained_models/sagittal_imagenet_pretrained_train_all_1/epoch=983-step=10824.ckpt'

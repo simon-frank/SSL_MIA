@@ -1,3 +1,5 @@
+from cProfile import label
+from turtle import color
 from utils.modelFactory import createFinetuningModel, loadFinetuningModel
 from utils.data import get_data_pretraining, load_config, get_data_finetuning, load_config, calculate_label_counts, save_performance
 import torch
@@ -59,22 +61,36 @@ def main():
     print(f"Test loss: {test_loss:.4f}")
     print(f"Accuracy: {accuracy:.2f}")
     
+    class_labels = ['Heart', 'Left Lung', 'Right Lung', 'Liver', 'Spleen', 'Pancreas',
+                'Left Kidney', 'Right Kidney', 'Bladder', 'Left Femoral Head', 'Right Femoral Head']
+
     normalized_confusion_matrix = confusion_matrix/ confusion_matrix.sum(axis=1)[:, np.newaxis]  
+    normalized_confusion_matrix *=100
     # Plot the normalized confusion matrix
     plt.figure(figsize=(10, 8))
     plt.imshow(normalized_confusion_matrix, interpolation='nearest', cmap=plt.cm.Blues)
     plt.title('Normalized Confusion Matrix')
-    plt.colorbar()
+    plt.colorbar(label='in %')
     tick_marks = np.arange(num_classes)
-    plt.xticks(tick_marks, range(1,num_classes+1))
-    plt.yticks(tick_marks, range(1,num_classes+1))
+    plt.xticks(tick_marks, class_labels, rotation=90, ha='right')
+    plt.yticks(tick_marks, class_labels)
     plt.xlabel('Predicted Class')
     plt.ylabel('True Class')
+
+    for i in range(num_classes):
+        for j in range(num_classes):
+            if normalized_confusion_matrix[i, j]>0.0:
+                color= "white" if normalized_confusion_matrix[i, j] > 50 else "black"
+                print(color)
+                plt.text(j, i, '{:.2f}'.format(normalized_confusion_matrix[i, j]), 
+                         ha="center", va="center", color=color)
+
     plt.tight_layout()
 
     save_directory = os.path.dirname(config['finetuning']['modelpath'])
+    base = os.path.basename(save_directory)
     save_performance(test_loss, accuracy, save_directory)
     # Save the plot as a PNG file
-    plt.savefig(os.path.join(save_directory,'confusion_matrix.png'))
+    plt.savefig(os.path.join(save_directory,base+'_confusion_matrix_10.png'))
 if __name__ == '__main__':
     main()
