@@ -81,7 +81,6 @@ def main():
         for j in range(num_classes):
             if normalized_confusion_matrix[i, j]>0.0:
                 color= "white" if normalized_confusion_matrix[i, j] > 50 else "black"
-                print(color)
                 plt.text(j, i, '{:.2f}'.format(normalized_confusion_matrix[i, j]), 
                          ha="center", va="center", color=color)
 
