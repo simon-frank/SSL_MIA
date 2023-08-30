@@ -3,7 +3,6 @@ import os
 import torch
 import torch.nn as nn
 
-from models.barlowtwins import BarlowTwinsLit
 from utils.data import get_data_pretraining, load_config
 from utils.modelFactory import createModel
 #from utils.custommultiviewcollatefunction import CustomMultiViewCollateFunction
@@ -49,7 +48,7 @@ def main():
     #    monitor='val_loss',  # Metric to monitor for saving models
     #)
 
-    save_path = os.path.join(config['savedmodel']['path'], config['savemodel']['name'])
+    save_path = os.path.join(config['savedmodel']['path'], config['savedmodel']['name'])
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     checkpoint_callback = ModelCheckpoint(
@@ -61,8 +60,12 @@ def main():
         max_epochs = config['epochs'],
         devices='auto',
         accelerator=accelerator,
+        strategy = 'ddp',
+        sync_batchnorm = True,
+        use_distributed_sampler = True,
         callbacks=[checkpoint_callback],
         log_every_n_steps=15,
+        precision = 16
     )
     trainer.fit(model= model, train_dataloaders=dataloader)
 

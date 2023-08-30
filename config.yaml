@@ -1,21 +1,17 @@
 data: 
-  path: '/graphics/scratch2_recovery/datasets/practical_course/MIMeta/data'
+  path: '/graphics/scratch3/students/krauseg/data'
   datasets:
-    - domain: 'organs_axial'
-      task: 'organ label'
-    - domain: 'organs_coronal'
-      task: 'organ label'
-    - domain: 'organs_sagittal'
-      task: 'organ label'
+    - domain: 'crc'
+      task: 'tissue class'
 evaluation:
-  domain: 'Coronal Organ Slices'
-  task: 'organ label'
-  modelpath: '/home/franksim/SSL_MIA/trained_models/firstrun/epoch=999-step=8000.ckpt'
+  domain: 'Colorectal Cancer'
+  task: 'tissue class'
+  modelpath: '/home/krauseg/SSL_MIA/trained_models/firstrun/epoch=999-step=84000.ckpt'
 lr: 0.03
 optimizer: Adam
-weight_decay: 0.0000015
+weight_decay: 0.03
 epochs: 1000
-batch_size: 256
+batch_size: 64
 img_size: 224
 transform: 'SimCLRTransform'
 savedmodel:
@@ -42,3 +38,4 @@ finetuning:
   output_size: 11
   name: ['coronal_not_pretrained_train_all_1', 'coronal_not_pretrained_train_all_0_5', 'coronal_not_pretrained_train_all_0_25', 'coronal_not_pretrained_train_all_0_1']
   modelpath: '/home/franksim/SSL_MIA/trained_models/sagittal_imagenet_pretrained_train_all_1/epoch=983-step=10824.ckpt'
+

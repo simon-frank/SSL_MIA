@@ -1,0 +1,34 @@
+---
+title: "Untitled"
+author: "Daniela Kemp"
+date: "2023-06-21"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library('stats')
+library('tidyverse')
+library('ggplot2')
+library('data.table')
+```
+
+```{r cars}
+Accuraccies<- data.frame(c(100 , 50 ,25 , 10 ), c(93.90  ,92.68 ,90.24 ,84.15) , c(95.73 ,93.29 ,93.9 ,85.98 ),c( 78.05 ,75.00 ,71.95 ,64.02 ),c( 92.68 ,95.12 ,89.02 ,80.49 ), c(90.85 ,89.02 ,86.59 ,73.78))
+colnames(Accuraccies)<-c("percent","barlow_twins_readouthead_only","barlow_twins_whole_model","imagenet_readouthead_only","imagenet_whole_model", "no_pretraining_whole_model")
+long_Accuraccies<-melt(Accuraccies %>% data.table(), id=1)
+colors<-c("#e96d96","#9b1743","#6de98e","#2d9b17", "#000000")
+
+png("accuracies.png")
+
+ggplot(data=long_Accuraccies, aes(x=percent, y=value, col=variable))+
+    geom_line(size=1)+
+    geom_point(size=1.5)+
+    scale_color_manual(values=colors,name="Models",labels = c("barlow twins, readout-head", "barlow twins, whole model", "imagenet, readout-head", "imagenet, whole model", "no pretraining, whole model"))+
+  labs(x="portion of dataset used as trainingdata", y="accuracy",title="Accuracy for different models and different size of training data")+
+  scale_x_continuous(breaks=c(25,50,75,100),labels=c("25%","50%","75%","100%"))+
+  scale_y_continuous(breaks=c(65,70,75,80,85,90,95),labels=c("65%","70%","75%","80%","85%","90%","95%"))
+
+dev.off()
+
+```

@@ -2,6 +2,8 @@ from utils.modelFactory import createFinetuningModel
 from utils.data import get_data_pretraining, load_config, get_data_finetuning, save_config
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
+from pytorch_lightning.callbacks.early_stopping import EarlyStopping
+
 import torch
 import os 
 
