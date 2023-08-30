@@ -1,12 +1,15 @@
-data: 
+# the config necessary to specfic all the different settings used for pretraining and finetuning
+# in this config the pretraining and finetuning is defined but only the relevant part is used
+data: #this is the data set for the pre training
   path: '/graphics/scratch3/students/krauseg/data'
   datasets:
-    - domain: 'crc'
+    - domain: 'crc' 
       task: 'tissue class'
-evaluation:
+evaluation: #data used for the finetuning
   domain: 'Colorectal Cancer'
   task: 'tissue class'
-  modelpath: '/home/krauseg/SSL_MIA/trained_models/firstrun/epoch=999-step=84000.ckpt'
+  modelpath: '/home/krauseg/SSL_MIA/trained_models/firstrun/epoch=999-step=84000.ckpt' #modelpath for the pretrained model, which will be used for finetuning
+#optimizer config for the pretraining
 lr: 0.03
 optimizer: Adam
 weight_decay: 0.03
@@ -18,6 +21,7 @@ savedmodel:
   path: 'trained_models'
   name: 'firstrun'
 usedMethod: 'BarlowTwins'
+#pretraining settings
 pretraining:
   method: 
     name: 'BarlowTwins'
@@ -28,6 +32,7 @@ pretraining:
       input_size: 512
       hidden_size: 2048
       output_size: 2048
+#settings like finetuning
 finetuning:
   pretrained: 'None' # 'imagenet' or 'None' or 'barlowtwins '
   trainall: True
