@@ -72,9 +72,13 @@ def createModel(config: dict)-> nn.Module:
 
 def createFinetuningModel(config)->nn.Module:
     # get pretrained model
-    if config['finetuning']['pretrained']:
+    if config['finetuning']['pretrained']== 'imagenet':
         if config["pretraining"]["method"]["backbone"]["name"] == 'resnet18':
             backbone = torchvision.models.resnet18(pretrained=True)
+            backbone.fc = nn.Identity()
+    elif config['finetuning']['pretrained']== 'None':
+        if config["pretraining"]["method"]["backbone"]["name"] == 'resnet18':
+            backbone = torchvision.models.resnet18(zero_init_residual=True)
             backbone.fc = nn.Identity()
     else:
         model = loadModel(config)
@@ -89,6 +93,7 @@ def createFinetuningModel(config)->nn.Module:
 
 def loadFinetuningModel(config)-> nn.Module:
     backbone = loadModel(config).backbone
+    # all the weight are loaded from the pretrained model in config["finetuning"]["modelpath"]
     model = Base.load_from_checkpoint(config["finetuning"]["modelpath"], backbone= backbone,ReadoutHead = ReadoutHead(512, config['finetuning']['output_size']),config=config)
     model.eval()
     return model

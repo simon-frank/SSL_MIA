@@ -1,7 +1,12 @@
+from cProfile import label
+from turtle import color
 from utils.modelFactory import createFinetuningModel, loadFinetuningModel
 from utils.data import get_data_pretraining, load_config, get_data_finetuning,\
  load_config, calculate_label_counts, calc_label_counts, confusion_matrix, print_confusion_matrix, plot_confusion_matrix
 import torch
+import numpy as np
+import matplotlib.pyplot as plt
+import os
 
 from tqdm import tqdm
 
@@ -9,6 +14,8 @@ from tqdm import tqdm
 def main():
     # Load config file
     config = load_config('config.yaml')
+
+
 
     # create model
     model = loadFinetuningModel(config)
@@ -20,7 +27,7 @@ def main():
     dataloader_val= torch.utils.data.DataLoader(
             test,
             64,
-            shuffle = False,
+             shuffle = False,
             num_workers= 8)
     
     print('Class balance:{0}'.format(calc_label_counts(dataloader_val)))
@@ -45,6 +52,7 @@ def main():
             # Calculate the accuracy
             _, predicted = torch.max(outputs, 1)
 
+
             pred = torch.hstack([pred, predicted.detach().cpu()])
             targs = torch.hstack([targs, targets.detach().cpu()])
             total += targets.size(0)
@@ -56,6 +64,7 @@ def main():
     
     print(f"Test loss: {test_loss:.4f}")
     print(f"Accuracy: {accuracy:.2f}")
+
     print()
     print_confusion_matrix(confusion_matrix(targs, pred))
     plot_confusion_matrix(confusion_matrix(targs, pred))

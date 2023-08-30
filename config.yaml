@@ -29,11 +29,13 @@ pretraining:
       hidden_size: 2048
       output_size: 2048
 finetuning:
-  pretrained: False 
-  trainall: False
-  trainsplit: 1
-  lr: 0.03
-  epochs: 1000
+  pretrained: 'None' # 'imagenet' or 'None' or 'barlowtwins '
+  trainall: True
+  trainsplit: 1 #[1, 0.5,0.25,0.1]
+  batch_size: 128
+  lr: 0.0001
+  epochs: 1# [10000, 10000, 10000, 10000]
   output_size: 11
-  name: 'finetuning_readouthead_100'
-  modelpath: '/home/krauseg/SSL_MIA/trained_models/finetune_all_10/epoch=34-step=4690.ckpt'
+  name: ['coronal_not_pretrained_train_all_1', 'coronal_not_pretrained_train_all_0_5', 'coronal_not_pretrained_train_all_0_25', 'coronal_not_pretrained_train_all_0_1']
+  modelpath: '/home/franksim/SSL_MIA/trained_models/sagittal_imagenet_pretrained_train_all_1/epoch=983-step=10824.ckpt'
+

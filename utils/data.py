@@ -4,6 +4,8 @@ import torch
 from torchvision import transforms
 import yaml
 from lightly.transforms.simclr_transform import SimCLRTransform
+
+import os
 from lightly.transforms.vicregl_transform import VICRegLTransform
 from lightly.transforms.moco_transform import MoCoV2Transform
 
@@ -88,6 +90,21 @@ def load_config(path):
         config['transform'] = MoCoV2Transform(input_size = config['img_size'])
     return config
 
+def save_config(data, path):
+    output_file = os.path.join(path, 'config.yaml')
+    with open(output_file, "w") as file:
+        yaml.dump(data, file)
+
+def save_performance(test_loss, test_accuracy, save_directory):
+    
+    # Specify the filename for the output text file
+    output_file = output_file = os.path.join(save_directory, "results.txt")
+    
+    # Save the test loss and accuracy to the file
+    with open(output_file, "w") as file:
+        file.write(f"Test Loss: {test_loss}\n")
+        file.write(f"Test Accuracy: {test_accuracy}\n")
+    
 """
 Helper function to calculate the balance in the dataset
 """
