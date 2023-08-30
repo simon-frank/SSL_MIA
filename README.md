@@ -9,4 +9,4 @@ In the following a quick overview over the content of the files:
 - finetuning_evaluation.py: calculate the accuracies on the test set and create confusion matrix
 - finetuning.py: finetuning the pretrained model on the downstream dataset
 - utils: different kind of util files
--  
+- models: different models used 
